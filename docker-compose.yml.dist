@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  database:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: dummypassword
+      MYSQL_DATABASE: givts
+      MYSQL_USER: dummyuser
+      MYSQL_PASSWORD: dummypassword
+    networks:
+      - backend
+    restart: on-failure
+    ports:
+      - '3306:3306'
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web.dev
+    volumes:
+      - './web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '80:8080'
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api.dev
+    ports:
+      - '8080:8080'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
