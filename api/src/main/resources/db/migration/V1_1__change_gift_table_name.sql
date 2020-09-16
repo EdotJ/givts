@@ -1,0 +1,1 @@
+RENAME TABLE gift TO gifts;

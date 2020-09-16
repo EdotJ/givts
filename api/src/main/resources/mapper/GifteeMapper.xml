@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.givts.app.mapper.GifteeMapper">
+    <select id="selectGifteeById" parameterType="long" resultMap="gifteeResultMap">
+        SELECT G.id AS giftee_id,
+               G.name AS giftee_name,
+               G.created_date AS giftee_created_date,
+               U.id AS user_id,
+               U.name AS user_name,
+               U.email AS user_email,
+               U.created_date AS user_created_date
+        FROM giftees G
+        JOIN users U ON G.user_id = U.id
+        WHERE G.id = #{id}
+    </select>
+
+    <insert id="insertGiftee">
+        INSERT INTO giftees (name, created_date, user_id) VALUES (#{name}, CURDATE(), #{user.id})
+    </insert>
+
+    <update id="updateGifteeById">
+        UPDATE giftees SET name = #{g.name} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteGiftee">
+        DELETE FROM giftees WHERE id = #{id}
+    </delete>
+
+    <resultMap id="gifteeResultMap" type="Giftee">
+        <id property="id"  column="giftee_id" />
+        <result property="name" column="giftee_name" />
+        <result property="createdDate" column="giftee_created_date" />
+        <association property="user" resultMap="com.givts.app.mapper.UserMapper.userResultMap" javaType="User" columnPrefix="user_"/>
+    </resultMap>
+
+</mapper>

@@ -1,17 +1,20 @@
 version: "3.8"
 services:
   database:
-    image: mariadb:10.5
+    image: mariadb:10.4
     environment:
-      MYSQL_ROOT_PASSWORD: dummypassword
+      MYSQL_ROOT_PASSWORD: /run/secrets/db_root_password
       MYSQL_DATABASE: givts
       MYSQL_USER: dummyuser
-      MYSQL_PASSWORD: dummypassword
+      MYSQL_PASSWORD: /run/secrets/db_password
     networks:
       - backend
     restart: on-failure
     ports:
       - '3306:3306'
+    secrets:
+      - db_root_password
+      - db_password
   web:
     build:
       context: .
@@ -21,14 +24,12 @@ services:
       - '/usr/src/app/node_modules'
     ports:
       - '80:8080'
-  api:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.api.dev
-    ports:
-      - '8080:8080'
-    networks:
-      - backend
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
 
 networks:
   backend:

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.givts.app.mapper.GiftMapper">
+    <select id="selectGiftById" parameterType="long" resultMap="giftResultMap">
+        SELECT GF.id AS gift_id,
+               GF.name AS gift_name,
+               GF.description AS gift_description,
+               GF.created_date AS gift_created_date,
+               GF.modified_date AS gift_modified_date,
+               O.id AS occasion_id,
+               O.name AS occasion_name,
+               O.date AS occasion_date,
+               O.created_date AS occasion_created_date,
+               O.modified_date AS occasion_modified_date,
+               G.id AS giftee_id,
+               G.name AS giftee_name,
+               G.created_date AS giftee_created_date,
+               U.id AS user_id,
+               U.created_date AS user_created_date,
+               U.name AS user_name,
+               U.email AS user_email
+        FROM gifts GF
+                 JOIN occasions O ON GF.occasion_id = O.id
+                 JOIN giftees G ON O.giftee_id = G.id
+                 JOIN users U ON G.user_id = U.id
+        WHERE GF.id = #{id}
+    </select>
+
+    <insert id="insertGift">
+        INSERT INTO gifts (name, description, created_date, occasion_id)
+        VALUES (#{name}, #{description}, CURDATE(), #{occasion.id})
+    </insert>
+
+    <update id="updateGiftById">
+        UPDATE gifts SET name = #{g.name}, description = #{g.description}, modified_date = CURDATE() WHERE id = #{id}
+    </update>
+
+    <delete id="deleteGift">
+        DELETE FROM gifts WHERE id = #{id}
+    </delete>
+
+    <resultMap id="giftResultMap" type="Gift">
+        <id property="id"  column="gift_id" />
+        <result property="name" column="gift_name" />
+        <result property="description" column="gift_description" />
+        <result property="createdDate" column="gift_created_date" />
+        <result property="modifiedDate" column="gift_modified_date" />
+        <association property="occasion" resultMap="com.givts.app.mapper.OccasionMapper.occasionResultMap" javaType="Occasion"/>
+    </resultMap>
+
+</mapper>
