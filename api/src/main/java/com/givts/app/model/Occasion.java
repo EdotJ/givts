@@ -1,23 +1,44 @@
-package com.givts.app.domain;
+package com.givts.app.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
+@Entity
+@Table(name = "occasions")
 public class Occasion implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "date")
     private LocalDate date;
-    private LocalDate createdDate;
-    private LocalDate modifiedDate;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "occasion")
+    private List<Gift> gifts;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "giftee_id")
     private Giftee giftee;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -37,12 +58,20 @@ public class Occasion implements Serializable {
         this.date = date;
     }
 
-    public LocalDate getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public LocalDate getModifiedDate() {
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
+    }
+
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public Giftee getGiftee() {

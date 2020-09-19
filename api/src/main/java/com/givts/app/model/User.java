@@ -1,17 +1,32 @@
-package com.givts.app.domain;
+package com.givts.app.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private long id;
+    @Id
+    private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "email")
     private String email;
-    private LocalDate createdDate;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Giftee> giftees;
 
     public String getName() {
         return name;
@@ -29,15 +44,15 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public LocalDate getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
