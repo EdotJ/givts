@@ -2,7 +2,6 @@ package com.givts.app.payload.Occasion;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.givts.app.model.Occasion;
-import com.givts.app.payload.Giftee.SingleGifteeResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,15 +20,12 @@ public class SingleOccasionResponse {
     @JsonProperty("modified_date")
     private LocalDateTime modifiedDate;
 
-    @JsonProperty("giftee")
-    private SingleGifteeResponse gifteeResponse;
-
     public SingleOccasionResponse(Occasion occasion) {
         this.id = occasion.getId();
         this.name = occasion.getName();
+        this.date = occasion.getDate();
         this.createdDate = occasion.getCreatedDate();
         this.modifiedDate = occasion.getModifiedDate();
-        this.gifteeResponse = new SingleGifteeResponse(occasion.getGiftee());
     }
 
     public Long getId() {
@@ -70,13 +66,5 @@ public class SingleOccasionResponse {
 
     public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
-    }
-
-    public SingleGifteeResponse getGifteeResponse() {
-        return gifteeResponse;
-    }
-
-    public void setGifteeResponse(SingleGifteeResponse gifteeResponse) {
-        this.gifteeResponse = gifteeResponse;
     }
 }

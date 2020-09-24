@@ -12,17 +12,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GiftService extends CrudService<Gift> {
+public class GiftService {
+
+    GiftRepository repository;
 
     OccasionService occasionService;
 
-    public GiftService(GiftRepository repository, OccasionService occasionService) {
-        super(repository);
+    public GiftService(GiftRepository giftRepository, OccasionService occasionService) {
+        repository = giftRepository;
         this.occasionService = occasionService;
     }
 
-    public Gift create(GiftRequest request) {
-        Occasion occasion = occasionService.findById(request.getOccasionId());
+    public Gift create(long userId, long gifteeId, long occasionId, GiftRequest request) {
+        Occasion occasion = occasionService.findById(userId, gifteeId, occasionId);
         Gift gift = new Gift();
         gift.setName(request.getName());
         gift.setDescription(request.getDescription());
@@ -31,9 +33,9 @@ public class GiftService extends CrudService<Gift> {
         return repository.save(gift);
     }
 
-    public Gift update(long id, GiftRequest request) {
-        Gift gift = getById(id);
-        Occasion occasion = occasionService.findById(request.getOccasionId());
+    public Gift update(long userId, long gifteeId, long occasionId, long id, GiftRequest request) {
+        Gift gift = findById(userId, gifteeId, occasionId, id);
+        Occasion occasion = occasionService.findById(userId, gifteeId, occasionId);
         gift.setName(request.getName());
         gift.setDescription(request.getDescription());
         gift.setOccasion(occasion);
@@ -41,16 +43,25 @@ public class GiftService extends CrudService<Gift> {
         return repository.save(gift);
     }
 
-    public Gift getById(long id) {
+    public Gift findById(long userId, long gifteeId, long occasionId, long id) {
+        occasionService.findById(userId, gifteeId, occasionId);
         Optional<Gift> optionalGift = repository.findById(id);
         if (optionalGift.isEmpty()) {
-            throw new ResourceNotFoundException("Gift", "id");
+            throw new ResourceNotFoundException("Gift", "id", String.valueOf(id));
+        }
+        if (optionalGift.get().getOccasion().getId() != occasionId) {
+            throw new ResourceNotFoundException("Gift", "occasion id", String.valueOf(occasionId));
         }
         return optionalGift.get();
     }
 
-    public void deleteById(long id) {
-        Gift gift = getById(id);
+    public void deleteById(long userId, long gifteeId, long occasionId, long id) {
+        Gift gift = findById(userId, gifteeId, occasionId, id);
         repository.delete(gift);
+    }
+
+    public List<Gift> findAll(long userId, long gifteeId, long occasionId) {
+        occasionService.findById(userId, gifteeId, occasionId);
+        return repository.findAllByOccasionIdAndGifteeIdAndUserId(occasionId, gifteeId, userId);
     }
 }

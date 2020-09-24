@@ -36,22 +36,21 @@ public class GifteeControllerTest extends ControllerTestBase {
     @Override
     public void testInsert() {
         ResponseEntity<SingleGifteeResponse> gifteeResponse =
-                gifteeController.insert(new GifteeRequest("Tester", 1));
+                gifteeController.insert(1, new GifteeRequest("Tester"));
         assertEquals(201, gifteeResponse.getStatusCode().value());
         assertNotNull(gifteeResponse.getBody());
         assertEquals("Tester", gifteeResponse.getBody().getName());
-        assertEquals(1, gifteeResponse.getBody().getUserResponse().getId());
     }
 
     @Test
     public void testFailedInsert() {
         assertThrows(ResourceNotFoundException.class, () ->
-                gifteeController.insert(new GifteeRequest("Tester", 404)));
+                gifteeController.insert(404, new GifteeRequest("Tester")));
     }
 
     @Test
     public void testGetAll() {
-        ResponseEntity<GifteeResponse> gifteeResponse = gifteeController.getAll();
+        ResponseEntity<GifteeResponse> gifteeResponse = gifteeController.getAll(1);
         assertEquals(200, gifteeResponse.getStatusCode().value());
         assertNotNull(gifteeResponse.getBody());
         assertTrue(gifteeResponse.getBody().getGifteeCount() > 0);
@@ -60,20 +59,19 @@ public class GifteeControllerTest extends ControllerTestBase {
     @Test
     @Override
     public void testGetSingle() {
-        ResponseEntity<SingleGifteeResponse> gifteeResponse = gifteeController.get(1);
+        ResponseEntity<SingleGifteeResponse> gifteeResponse = gifteeController.get(1, 1);
         assertEquals(200, gifteeResponse.getStatusCode().value());
         assertNotNull(gifteeResponse.getBody());
 
         // following data is from data.sql
         assertEquals("Antanas", gifteeResponse.getBody().getName());
-        assertEquals(1, gifteeResponse.getBody().getUserResponse().getId());
     }
 
     @Test
     @Override
     public void testUpdate() {
-        GifteeRequest gifteeRequest = new GifteeRequest("Zenka", 1);
-        ResponseEntity<SingleGifteeResponse> gifteeResponse = gifteeController.update(1, gifteeRequest);
+        GifteeRequest gifteeRequest = new GifteeRequest("Zenka");
+        ResponseEntity<SingleGifteeResponse> gifteeResponse = gifteeController.update(1, 1, gifteeRequest);
         assertEquals(200, gifteeResponse.getStatusCode().value());
         assertNotNull(gifteeResponse.getBody());
         assertEquals("Zenka", gifteeResponse.getBody().getName());
@@ -82,7 +80,7 @@ public class GifteeControllerTest extends ControllerTestBase {
     @Test
     @Override
     public void testDelete() {
-        ResponseEntity<Object> responseEntity = gifteeController.delete(1);
+        ResponseEntity<Object> responseEntity = gifteeController.delete(1, 1);
         assertEquals(0, gifteeRepository.findAll().size());
         assertEquals(204, responseEntity.getStatusCodeValue());
     }

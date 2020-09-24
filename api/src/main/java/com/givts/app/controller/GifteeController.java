@@ -11,11 +11,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/giftees")
-public class GifteeController extends BaseCrudController<GifteeRequest, GifteeResponse, SingleGifteeResponse> {
+@RequestMapping("/users/{userId}/giftees")
+public class GifteeController extends CrudControllerBase {
 
     GifteeService gifteeService;
 
@@ -24,27 +25,25 @@ public class GifteeController extends BaseCrudController<GifteeRequest, GifteeRe
     }
 
     @GetMapping
-    @Override
-    public ResponseEntity<GifteeResponse> getAll() {
+    public ResponseEntity<GifteeResponse> getAll(@PathVariable long userId) {
+        List<Giftee> gifteeList = gifteeService.findAllByUserId(userId);
         GifteeResponse gifteeResponse = new GifteeResponse();
-        gifteeResponse.setGiftees(
-                gifteeService.findAll().stream()
-                        .map(SingleGifteeResponse::new)
-                        .collect(Collectors.toList()));
-        return ResponseEntity.ok().body(gifteeResponse);
+        gifteeResponse.setGiftees(gifteeList.stream()
+                .map(SingleGifteeResponse::new)
+                .collect(Collectors.toList()));
+        return ResponseEntity.ok(gifteeResponse);
     }
 
     @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<SingleGifteeResponse> get(@PathVariable long id) {
-        Giftee giftee = gifteeService.findById(id);
+    public ResponseEntity<SingleGifteeResponse> get(@PathVariable long userId, @PathVariable long id) {
+        Giftee giftee = gifteeService.findById(userId, id);
         return ResponseEntity.ok().body(new SingleGifteeResponse(giftee));
     }
 
     @PostMapping
-    @Override
-    public ResponseEntity<SingleGifteeResponse> insert(@Valid @RequestBody GifteeRequest gifteeRequest) {
-        Giftee createdGiftee = gifteeService.create(gifteeRequest);
+    public ResponseEntity<SingleGifteeResponse> insert(@PathVariable long userId,
+                                                       @Valid @RequestBody GifteeRequest gifteeRequest) {
+        Giftee createdGiftee = gifteeService.create(userId, gifteeRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{gifteeId}")
                 .buildAndExpand(createdGiftee.getId()).toUri();
@@ -52,16 +51,16 @@ public class GifteeController extends BaseCrudController<GifteeRequest, GifteeRe
     }
 
     @PutMapping("/{id}")
-    @Override
-    public ResponseEntity<SingleGifteeResponse> update(@PathVariable long id, @RequestBody @Valid GifteeRequest gifteeRequest) {
-        Giftee updatedGiftee = gifteeService.update(id, gifteeRequest);
+    public ResponseEntity<SingleGifteeResponse> update(@PathVariable long id,
+                                                       @PathVariable long userId,
+                                                       @RequestBody @Valid GifteeRequest gifteeRequest) {
+        Giftee updatedGiftee = gifteeService.update(userId, id, gifteeRequest);
         return ResponseEntity.ok(new SingleGifteeResponse(updatedGiftee));
     }
 
     @DeleteMapping("/{id}")
-    @Override
-    public ResponseEntity<Object> delete(@PathVariable long id) {
-        gifteeService.deleteById(id);
+    public ResponseEntity<Object> delete(@PathVariable long id, @PathVariable long userId) {
+        gifteeService.deleteById(id, userId);
         return ResponseEntity.status(204).build();
     }
 }

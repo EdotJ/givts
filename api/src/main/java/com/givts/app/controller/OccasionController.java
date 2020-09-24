@@ -1,6 +1,5 @@
 package com.givts.app.controller;
 
-import com.givts.app.exception.ResourceNotFoundException;
 import com.givts.app.model.Occasion;
 import com.givts.app.payload.Occasion.OccasionRequest;
 import com.givts.app.payload.Occasion.OccasionResponse;
@@ -16,8 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/occasions")
-public class OccasionController extends BaseCrudController<OccasionRequest, OccasionResponse, SingleOccasionResponse> {
+@RequestMapping("/users/{userId}/giftees/{gifteeId}/occasions")
+public class OccasionController extends CrudControllerBase {
 
     private OccasionService occasionService;
 
@@ -26,9 +25,8 @@ public class OccasionController extends BaseCrudController<OccasionRequest, Occa
     }
 
     @GetMapping
-    @Override
-    public ResponseEntity<OccasionResponse> getAll() {
-        List<Occasion> occasionList = occasionService.findAll();
+    public ResponseEntity<OccasionResponse> getAll(@PathVariable long userId, @PathVariable long gifteeId) {
+        List<Occasion> occasionList = occasionService.findAll(userId, gifteeId);
         OccasionResponse occasionResponse = new OccasionResponse();
         occasionResponse.setOccasions(occasionList.stream()
                 .map(SingleOccasionResponse::new)
@@ -37,18 +35,18 @@ public class OccasionController extends BaseCrudController<OccasionRequest, Occa
     }
 
     @GetMapping("/{id}")
-    @Override
-    public ResponseEntity<SingleOccasionResponse> get(@PathVariable long id) {
-        Occasion occasion = occasionService.findById(id);
+    public ResponseEntity<SingleOccasionResponse> get(@PathVariable long userId, @PathVariable long gifteeId,
+                                                      @PathVariable long id) {
+        Occasion occasion = occasionService.findById(userId, gifteeId, id);
         return occasion == null ?
                 ResponseEntity.notFound().build()
                 : ResponseEntity.ok(new SingleOccasionResponse(occasion));
     }
 
     @PostMapping
-    @Override
-    public ResponseEntity<SingleOccasionResponse> insert(@RequestBody @Valid OccasionRequest occasionRequest) {
-        Occasion createdOccasion = occasionService.create(occasionRequest);
+    public ResponseEntity<SingleOccasionResponse> insert(@PathVariable long userId, @PathVariable long gifteeId,
+                                                         @RequestBody @Valid OccasionRequest occasionRequest) {
+        Occasion createdOccasion = occasionService.create(userId, gifteeId, occasionRequest);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{occasionId}")
                 .buildAndExpand(createdOccasion.getId()).toUri();
@@ -56,17 +54,18 @@ public class OccasionController extends BaseCrudController<OccasionRequest, Occa
     }
 
     @PutMapping("/{id}")
-    @Override
-    public ResponseEntity<SingleOccasionResponse> update(
-            @PathVariable long id, @RequestBody @Valid OccasionRequest occasionRequest) {
-        Occasion updatedOccasion = occasionService.update(id, occasionRequest);
+    public ResponseEntity<SingleOccasionResponse> update( @PathVariable long userId,
+                                                          @PathVariable long gifteeId,
+                                                          @PathVariable long id,
+                                                          @RequestBody @Valid OccasionRequest occasionRequest) {
+        Occasion updatedOccasion = occasionService.update(userId, gifteeId, id, occasionRequest);
         return ResponseEntity.ok(new SingleOccasionResponse(updatedOccasion));
     }
 
     @DeleteMapping("/{id}")
-    @Override
-    public ResponseEntity<Object> delete(@PathVariable long id) {
-        occasionService.deleteById(id);
+    public ResponseEntity<Object> delete(@PathVariable long userId, @PathVariable long gifteeId,
+                                         @PathVariable long id) {
+        occasionService.deleteById(userId, gifteeId, id);
         return ResponseEntity.status(204).build();
     }
 }

@@ -56,6 +56,10 @@ public class User implements Serializable {
         return createdDate;
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     @Override
     public String toString() {
         return getId() + ": name=" + getName() + ", email=" + getEmail();

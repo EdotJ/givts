@@ -2,23 +2,21 @@ package com.givts.app.payload.Giftee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class GifteeRequest {
 
     @JsonProperty
-    private long id;
-
-    @JsonProperty
     @NotNull (message = "{name.notNull}")
+    @Size(min = 1, message = "{name.notEmpty}")
     private String name;
 
-    @JsonProperty("user")
-    @NotNull (message = "{giftee.userId.notNull}")
-    private Long userId;
+    public GifteeRequest() {
 
-    public GifteeRequest(String name, long userId) {
+    }
+
+    public GifteeRequest(String name) {
         this.name = name;
-        this.userId = userId;
     }
 
     public String getName() {
@@ -27,21 +25,5 @@ public class GifteeRequest {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

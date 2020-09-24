@@ -8,31 +8,34 @@ import com.givts.app.repository.OccasionRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OccasionService extends CrudService<Occasion> {
+public class OccasionService {
+
+    OccasionRepository repository;
 
     GifteeService gifteeService;
 
     public OccasionService(OccasionRepository occasionRepository, GifteeService gifteeService) {
-       super(occasionRepository);
+       repository = occasionRepository;
        this.gifteeService = gifteeService;
     }
 
-    public Occasion create(OccasionRequest request) {
-        Giftee giftee = gifteeService.findById(request.getGifteeId());
+    public Occasion create(long userId, long gifteeId, OccasionRequest request) {
+        Giftee giftee = gifteeService.findById(userId, gifteeId);
         Occasion occasion = new Occasion();
         occasion.setName(request.getName());
-        occasion.setDate(occasion.getDate());
+        occasion.setDate(request.getDate());
         occasion.setGiftee(giftee);
         occasion.setCreatedDate(LocalDateTime.now());
         return  repository.save(occasion);
     }
 
-    public Occasion update(long id, OccasionRequest request) {
-        Occasion occasion = findById(id);
-        Giftee giftee = gifteeService.findById(request.getGifteeId());
+    public Occasion update(long userId, long gifteeId, long id, OccasionRequest request) {
+        Occasion occasion = findById(userId, gifteeId, id);
+        Giftee giftee = gifteeService.findById(userId, gifteeId);
 
         occasion.setName(request.getName());
         occasion.setDate(request.getDate());
@@ -41,16 +44,25 @@ public class OccasionService extends CrudService<Occasion> {
         return repository.save(occasion);
     }
 
-    public void deleteById(long id) {
-        Occasion occasion = findById(id);
+    public void deleteById(long userId, long gifteeId, long id) {
+        Occasion occasion = findById(userId, gifteeId, id);
         repository.delete(occasion);
     }
 
-    public Occasion findById(long id) {
+    public Occasion findById(long userId, long gifteeId, long id) {
+        gifteeService.findById(userId, gifteeId);
         Optional<Occasion> occasion = repository.findById(id);
         if (occasion.isEmpty()) {
-            throw new ResourceNotFoundException("Occasion", "id");
+            throw new ResourceNotFoundException("Occasion", "id", String.valueOf(id));
+        }
+        if (occasion.get().getGiftee().getId() != gifteeId) {
+            throw new ResourceNotFoundException("Occasion", "giftee id", String.valueOf(gifteeId));
         }
         return occasion.get();
+    }
+
+    public List<Occasion> findAll(long userId, long gifteeId) {
+        gifteeService.findById(userId, gifteeId);
+        return repository.findAllByGifteeIdAndUserId(gifteeId, userId);
     }
 }

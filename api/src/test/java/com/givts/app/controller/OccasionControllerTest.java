@@ -35,23 +35,24 @@ public class OccasionControllerTest extends ControllerTestBase {
     @Test
     @Override
     public void testInsert() {
-        OccasionRequest occasionRequest = new OccasionRequest("TestOccasion", LocalDate.parse("2020-09-30"), 1);
-        ResponseEntity<SingleOccasionResponse> occasionResponse = occasionController.insert(occasionRequest);
+        OccasionRequest occasionRequest = new OccasionRequest("TestOccasion", LocalDate.parse("2020-09-30"));
+        ResponseEntity<SingleOccasionResponse> occasionResponse =
+                occasionController.insert(1, 1, occasionRequest);
         assertEquals(201, occasionResponse.getStatusCode().value());
         assertNotNull(occasionResponse.getBody());
         assertEquals("TestOccasion", occasionResponse.getBody().getName());
-        assertEquals(1, occasionResponse.getBody().getGifteeResponse().getId());
     }
 
     @Test
     public void testFailedInsert() {
         assertThrows(ResourceNotFoundException.class, () ->
-                occasionController.insert(new OccasionRequest("Tester", LocalDate.parse("2020-09-30"), 404)));
+                occasionController.insert(404, 404,
+                        new OccasionRequest("Tester", LocalDate.parse("2020-09-30"))));
     }
 
     @Test
     public void testGetAll() {
-        ResponseEntity<OccasionResponse> occasionResponse = occasionController.getAll();
+        ResponseEntity<OccasionResponse> occasionResponse = occasionController.getAll(1, 1);
         assertEquals(200, occasionResponse.getStatusCode().value());
         assertNotNull(occasionResponse.getBody());
         assertTrue(occasionResponse.getBody().getOccasionCount() > 0);
@@ -60,20 +61,19 @@ public class OccasionControllerTest extends ControllerTestBase {
     @Test
     @Override
     public void testGetSingle() {
-        ResponseEntity<SingleOccasionResponse> occasionResponse = occasionController.get(1);
+        ResponseEntity<SingleOccasionResponse> occasionResponse = occasionController.get(1, 1, 1);
         assertEquals(200, occasionResponse.getStatusCode().value());
         assertNotNull(occasionResponse.getBody());
 
         // following data is from data.sql
         assertEquals("Bernvakaris", occasionResponse.getBody().getName());
-        assertEquals(1, occasionResponse.getBody().getGifteeResponse().getId());
     }
 
     @Test
     @Override
     public void testUpdate() {
-        OccasionRequest occasionRequest = new OccasionRequest("Occasion", LocalDate.parse("2020-09-30"), 1);
-        ResponseEntity<SingleOccasionResponse> occasionResponse = occasionController.update(1, occasionRequest);
+        OccasionRequest occasionRequest = new OccasionRequest("Occasion", LocalDate.parse("2020-09-30"));
+        ResponseEntity<SingleOccasionResponse> occasionResponse = occasionController.update(1, 1,1, occasionRequest);
         assertEquals(200, occasionResponse.getStatusCode().value());
         assertNotNull(occasionResponse.getBody());
         assertEquals("Occasion", occasionResponse.getBody().getName());
@@ -82,7 +82,7 @@ public class OccasionControllerTest extends ControllerTestBase {
     @Test
     @Override
     public void testDelete() {
-        ResponseEntity<Object> responseEntity = occasionController.delete(1);
+        ResponseEntity<Object> responseEntity = occasionController.delete(1, 1, 1);
         assertEquals(0, occasionRepository.findAll().size());
         assertEquals(204, responseEntity.getStatusCodeValue());
     }
