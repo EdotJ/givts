@@ -2,3 +2,4 @@ docker-compose.yml
 docker-compose.prod.yml
 .idea
 secrets
+./oauth/node_modules

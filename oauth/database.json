@@ -1,0 +1,12 @@
+{
+  "default": "mysql",
+  "mysql": {
+    "driver": "mysql",
+    "user": "oauthuser",
+    "host": "localhost",
+    "port": "3307",
+    "password": "dummypassword",
+    "database": "oauth",
+    "multipleStatements": true
+  }
+}
