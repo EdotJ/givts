@@ -8,6 +8,7 @@ import com.givts.app.payload.User.SingleUserResponse;
 import com.givts.app.payload.User.UserResponse;
 import com.givts.app.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +27,7 @@ public class UserController extends CrudControllerBase {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getAll() {
         UserResponse userResponse = new UserResponse();
         userResponse.setUsers(userService.findAll().stream()
@@ -35,6 +37,7 @@ public class UserController extends CrudControllerBase {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@webSecurity.checkUserId(principal, #id) or hasRole('ADMIN')")
     public ResponseEntity<SingleUserResponse> get(@PathVariable long id) {
         User user = userService.findById(id);
         if (user == null) {
@@ -44,6 +47,7 @@ public class UserController extends CrudControllerBase {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SingleUserResponse> insert(@Valid @RequestBody UserRequest request) {
         User user = userService.findById(request.getId());
         if (user != null) {
@@ -60,12 +64,14 @@ public class UserController extends CrudControllerBase {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@webSecurity.checkUserId(principal, #id)")
     public ResponseEntity<SingleUserResponse> update(@PathVariable long id, @Valid @RequestBody UserRequest request) {
         User updatedUser = userService.update(id, request);
         return ResponseEntity.ok(new SingleUserResponse(updatedUser));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or @webSecurity.checkUserId(principal, #id)")
     public ResponseEntity<Object> delete(@PathVariable long id) {
         userService.deleteById(id);
         return ResponseEntity.status(204).build();

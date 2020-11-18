@@ -1,0 +1,11 @@
+FROM node:latest as build-stage
+WORKDIR /usr/src/app
+COPY ./oauth/client/package*.json ./
+RUN npm install
+COPY ./web .
+RUN npm run build
+
+FROM nginx as production-stage
+RUN mkdir /app
+COPY --from=build-stage /usr/src/app/dist /app
+COPY ./docker/nginx/nginx-oauth.conf /etc/nginx/nginx.conf

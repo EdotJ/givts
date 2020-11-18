@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS `roles`
+(
+    `id`   BIGINT      NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(32) NOT NULL,
+    CONSTRAINT `role_pk` PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+INSERT INTO `roles` (`name`)
+VALUES ('ROLE_USER'),
+       ('ADMIN');

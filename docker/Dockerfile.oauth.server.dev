@@ -1,0 +1,9 @@
+FROM node:14.10.1-alpine3.12
+WORKDIR /usr/src/app
+COPY ./oauth/server/package*.json ./
+COPY ./oauth/server/ext ./ext
+RUN npm install
+RUN npm install -g nodemon
+ENV NODE_ENV=development
+EXPOSE 3000
+CMD ["nodemon", "index.js"]

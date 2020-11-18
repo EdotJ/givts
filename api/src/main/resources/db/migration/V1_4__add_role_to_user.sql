@@ -1,0 +1,2 @@
+ALTER TABLE `users` ADD COLUMN `role_id` BIGINT DEFAULT 1;
+ALTER TABLE `users` ADD CONSTRAINT `role_fk` FOREIGN KEY (role_id) REFERENCES `roles` (id);

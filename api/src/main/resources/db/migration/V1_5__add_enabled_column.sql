@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD COLUMN `enabled` bool default 1;

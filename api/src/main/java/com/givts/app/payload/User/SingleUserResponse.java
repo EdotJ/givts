@@ -14,6 +14,8 @@ public class SingleUserResponse {
 
     private String email;
 
+    private String username;
+
     @JsonProperty("created_date")
     private LocalDateTime createdDate;
 
@@ -29,6 +31,7 @@ public class SingleUserResponse {
         this.name = user.getName();
         this.email = user.getEmail();
         this.createdDate = user.getCreatedDate();
+        this.username = user.getUsername();
     }
 
     public Long getId() {
@@ -61,5 +64,13 @@ public class SingleUserResponse {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

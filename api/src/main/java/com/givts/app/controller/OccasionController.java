@@ -6,6 +6,7 @@ import com.givts.app.payload.Occasion.OccasionResponse;
 import com.givts.app.payload.Occasion.SingleOccasionResponse;
 import com.givts.app.service.OccasionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

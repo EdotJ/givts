@@ -1,0 +1,7 @@
+FROM node:14.13.1-alpine3.12
+WORKDIR /usr/src/app
+COPY ./oauth/client/package*.json ./
+RUN npm install
+RUN npm install @vue/cli@4.5.6 -g
+EXPOSE 8080
+CMD ["npm", "run", "serve"]

@@ -6,6 +6,7 @@ import com.givts.app.payload.Gift.GiftResponse;
 import com.givts.app.payload.Gift.SingleGiftResponse;
 import com.givts.app.service.GiftService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

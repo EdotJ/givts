@@ -1,5 +1,8 @@
 package com.givts.app.model;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,10 +17,14 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "email")
     private String email;
@@ -25,8 +32,18 @@ public class User implements Serializable {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @Column(name = "enabled")
+    private boolean isEnabled;
+
+    @Column(name = "oauth_id")
+    private Long oauthId;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Giftee> giftees;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     public String getName() {
         return name;
@@ -58,6 +75,38 @@ public class User implements Serializable {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Long getOauthId() {
+        return oauthId;
+    }
+
+    public void setOauthId(Long oauthId) {
+        this.oauthId = oauthId;
     }
 
     @Override
