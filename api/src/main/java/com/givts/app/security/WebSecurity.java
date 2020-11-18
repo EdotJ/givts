@@ -13,7 +13,7 @@ public class WebSecurity {
         if (principal == null) {
             return false;
         }
-        Long userId = principal.getAttrib–ute("user_id");
+        Long userId = principal.getAttribute("user_id");
         if (userId == null) {
             return false;
         }
