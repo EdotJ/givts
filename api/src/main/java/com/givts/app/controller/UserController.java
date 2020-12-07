@@ -8,16 +8,21 @@ import com.givts.app.payload.User.SingleUserResponse;
 import com.givts.app.payload.User.UserResponse;
 import com.givts.app.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users")
 public class UserController extends CrudControllerBase {
 
     private final UserService userService;
@@ -26,7 +31,16 @@ public class UserController extends CrudControllerBase {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/user")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<SingleUserResponse> getCurrentUser(@AuthenticationPrincipal OAuth2User principal) {
+        if (principal.getAttribute("user_id") == null) {
+            throw new AccessDeniedException("Access is denied");
+        }
+        return get(principal.getAttribute("user_id"));
+    }
+
+    @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getAll() {
         UserResponse userResponse = new UserResponse();
@@ -36,7 +50,7 @@ public class UserController extends CrudControllerBase {
         return ResponseEntity.ok(userResponse);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     @PreAuthorize("@webSecurity.checkUserId(principal, #id) or hasRole('ADMIN')")
     public ResponseEntity<SingleUserResponse> get(@PathVariable long id) {
         User user = userService.findById(id);
@@ -46,7 +60,7 @@ public class UserController extends CrudControllerBase {
         return ResponseEntity.ok(new SingleUserResponse(user));
     }
 
-    @PostMapping
+    @PostMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SingleUserResponse> insert(@Valid @RequestBody UserRequest request) {
         User user = userService.findById(request.getId());
@@ -63,14 +77,14 @@ public class UserController extends CrudControllerBase {
         return ResponseEntity.created(location).body(new SingleUserResponse(user));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/users/{id}")
     @PreAuthorize("@webSecurity.checkUserId(principal, #id)")
     public ResponseEntity<SingleUserResponse> update(@PathVariable long id, @Valid @RequestBody UserRequest request) {
         User updatedUser = userService.update(id, request);
         return ResponseEntity.ok(new SingleUserResponse(updatedUser));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or @webSecurity.checkUserId(principal, #id)")
     public ResponseEntity<Object> delete(@PathVariable long id) {
         userService.deleteById(id);

@@ -3,6 +3,7 @@ package com.givts.app.payload.Gift;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.givts.app.model.Gift;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class SingleGiftResponse {
@@ -19,12 +20,19 @@ public class SingleGiftResponse {
     @JsonProperty("modified_date")
     private LocalDateTime modifiedDate;
 
+    private BigDecimal price;
+
+    @JsonProperty("image_id")
+    private String imagePath;
+
     public SingleGiftResponse(Gift gift) {
         this.id = gift.getId();
         this.name = gift.getName();
         this.description = gift.getDescription();
         this.createdDate = gift.getCreatedDate();
         this.modifiedDate = gift.getModifiedDate();
+        this.price = gift.getPrice();
+        this.imagePath = gift.getImagePath();
     }
 
     public long getId() {
@@ -65,5 +73,21 @@ public class SingleGiftResponse {
 
     public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

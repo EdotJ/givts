@@ -19,11 +19,14 @@ public class SingleUserResponse {
     @JsonProperty("created_date")
     private LocalDateTime createdDate;
 
-    public SingleUserResponse(Long id, String name, String email, LocalDateTime createdDate) {
+    private String role;
+
+    public SingleUserResponse(Long id, String name, String email, LocalDateTime createdDate, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.createdDate = createdDate;
+        this.role = role;
     }
 
     public SingleUserResponse(User user) {
@@ -32,6 +35,7 @@ public class SingleUserResponse {
         this.email = user.getEmail();
         this.createdDate = user.getCreatedDate();
         this.username = user.getUsername();
+        this.role = user.getRole().getName();
     }
 
     public Long getId() {
@@ -72,5 +76,13 @@ public class SingleUserResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

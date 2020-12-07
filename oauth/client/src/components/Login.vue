@@ -124,6 +124,8 @@ export default {
                   client_id: this.store.state.clientId,
                   state: this.store.state.clientState,
                   redirect_uri: this.store.state.redirect_uri,
+                  code_challenge: this.store.state.codeChallenge,
+                  code_challenge_method: this.store.state.codeChallengeMethod
                 }
               });
             } else {

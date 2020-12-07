@@ -15,6 +15,7 @@ function saveAuthCode(authCode, client, user) {
     const saveAuthCodeQuery =
             `INSERT INTO authorization_codes (code, expiration_date, redirect_uri, client_id, user_id, code_challenge)
              VALUES (?, ?, ?, ?, ?, ?)`;
+    console.log(authCode);
     return mariadbPool.safeQuery(saveAuthCodeQuery, authCode.authorizationCode, authCode.expiresAt,
         authCode.redirectUri, client.db_id, user.id, authCode.codeChallenge)
         .then(res => {

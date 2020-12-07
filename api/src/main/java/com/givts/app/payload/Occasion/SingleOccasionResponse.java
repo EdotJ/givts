@@ -20,12 +20,15 @@ public class SingleOccasionResponse {
     @JsonProperty("modified_date")
     private LocalDateTime modifiedDate;
 
+    private int giftCount;
+
     public SingleOccasionResponse(Occasion occasion) {
         this.id = occasion.getId();
         this.name = occasion.getName();
         this.date = occasion.getDate();
         this.createdDate = occasion.getCreatedDate();
         this.modifiedDate = occasion.getModifiedDate();
+        this.giftCount = occasion.getGifts() == null ? 0 : occasion.getGifts().size();
     }
 
     public Long getId() {
@@ -66,5 +69,13 @@ public class SingleOccasionResponse {
 
     public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public int getGiftCount() {
+        return giftCount;
+    }
+
+    public void setGiftCount(int giftCount) {
+        this.giftCount = giftCount;
     }
 }

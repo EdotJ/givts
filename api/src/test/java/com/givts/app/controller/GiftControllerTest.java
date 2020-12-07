@@ -8,6 +8,7 @@ import com.givts.app.repository.GiftRepository;
 import com.givts.app.service.GiftService;
 import com.givts.app.service.GifteeService;
 import com.givts.app.service.OccasionService;
+import com.givts.app.service.StorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,16 @@ public class GiftControllerTest extends ControllerTestBase {
     GiftService giftService;
 
     @Autowired
+    StorageService storageService;
+
+    @Autowired
     GiftRepository giftRepository;
 
     GiftController giftController;
 
     @BeforeEach
     public void setUp() {
-        giftController = new GiftController(giftService);
+        giftController = new GiftController(giftService, storageService);
         super.setUp();
     }
 
@@ -38,7 +42,7 @@ public class GiftControllerTest extends ControllerTestBase {
     @Override
     public void testInsert() {
         GiftRequest giftRequest = new GiftRequest("TestGift", "This is a test gift");
-        ResponseEntity<SingleGiftResponse> giftResponse = giftController.insert(1, 1, 1, giftRequest);
+        ResponseEntity<SingleGiftResponse> giftResponse = giftController.insert(1, 1, 1, giftRequest, null);
         assertEquals(201, giftResponse.getStatusCode().value());
         assertNotNull(giftResponse.getBody());
         assertEquals("TestGift", giftResponse.getBody().getName());
@@ -48,7 +52,7 @@ public class GiftControllerTest extends ControllerTestBase {
     public void testFailedInsert() {
         assertThrows(ResourceNotFoundException.class, () ->
                 giftController.insert(
-                        404, 1, 1, new GiftRequest("TestGift", "This is a test gift")));
+                        404, 1, 1, new GiftRequest("TestGift", "This is a test gift"), null));
     }
 
     @Test

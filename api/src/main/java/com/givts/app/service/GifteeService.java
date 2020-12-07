@@ -32,6 +32,9 @@ public class GifteeService {
         giftee.setName(gifteeRequest.getName());
         giftee.setUser(user);
         giftee.setCreatedDate(LocalDateTime.now());
+        giftee.setLikes(gifteeRequest.getLikes());
+        giftee.setDislikes(gifteeRequest.getDislikes());
+        giftee.setHobbies(gifteeRequest.getHobbies());
         return repository.save(giftee);
     }
 
@@ -43,6 +46,9 @@ public class GifteeService {
         }
         giftee.setName(gifteeRequest.getName());
         giftee.setUser(user);
+        giftee.setLikes(gifteeRequest.getLikes());
+        giftee.setDislikes(gifteeRequest.getDislikes());
+        giftee.setHobbies(gifteeRequest.getHobbies());
         return repository.save(giftee);
     }
 

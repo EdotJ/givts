@@ -56,7 +56,9 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new ResourceNotFoundException("User", "id", String.valueOf(id));
         }
-        repository.delete(user);
+        if (!("ROLE_ADMIN").equals(user.getRole().getName())) {
+            repository.delete(user);
+        }
     }
 
     public User findById(long id) {

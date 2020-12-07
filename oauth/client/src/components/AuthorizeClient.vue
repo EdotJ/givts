@@ -54,9 +54,12 @@ import configuration from "../config";
 import axios from "axios";
 import qs from "querystring";
 
-const checkError = (clientId) => {
-  if (!clientId) {
+const checkError = (query) => {
+  if (!query.client_id) {
     return "No client id provided!";
+  }
+  if (!query.code_challenge) {
+    return "No code challenge provided!";
   }
   return '';
 }
@@ -72,7 +75,7 @@ export default {
     };
   },
   mounted() {
-    this.error = checkError(this.$route.query.client_id);
+    this.error = checkError(this.$route.query);
     if (this.error && this.$route.query.redirect_uri) {
       location.replace(`${this.$route.query.redirect_uri}?error=invalid_request`);
     }
@@ -80,12 +83,19 @@ export default {
       this.store.setClientIdAction(this.$route.query.client_id);
       this.store.setClientStateAction(this.$route.query.state);
       this.store.setRedirectUriAction(this.$route.query.redirect_uri);
+      this.store.setCodeChallengeAction(this.$route.query.code_challenge);
+      if (!this.$route.query.code_challenge_method) {
+        this.store.setCodeChallengeMethodAction("S256");
+      } else {
+        this.store.setCodeChallengeMethodAction(this.$route.query.code_challenge_method);
+      }
       this.store.setAuthorizationAction(true);
       axios.get(`${configuration.hostname}/oauth/authorize`).then(() => {
         axios.get(`${configuration.hostname}/oauth/client/${this.$route.query.client_id}`).then(res => {
           this.isLoading = false;
           this.clientName = res.data.client.name;
           this.clientRedirectUri = res.data.client.redirectUri;
+
           if (!this.store.state.redirectUri) {
             this.store.setRedirectUriAction(this.clientRedirectUri);
           } else if (!this.clientRedirectUri.startsWith(this.store.state.redirectUri)) {
@@ -115,6 +125,8 @@ export default {
         client_id: this.store.state.clientId,
         response_type: 'code',
         state: this.store.state.clientState,
+        code_challenge: this.store.state.codeChallenge,
+        code_challenge_method: this.store.state.codeChallengeMethod,
       }
       axios.post(`${configuration.hostname}/oauth/authorize`, qs.stringify(body), config).then(res => {
         const redirectUri = this.store.state.redirectUri;

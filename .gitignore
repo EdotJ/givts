@@ -3,3 +3,4 @@ docker-compose.prod.yml
 .idea
 secrets
 ./oauth/node_modules
+./uploads

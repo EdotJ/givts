@@ -7,17 +7,21 @@ module.exports = (router, app, authenticator, clientService) => {
 
     router.post("/register", authenticator.registerUser);
     router.post("/token", (req, res) => {
-        if (!req.body.code_verifier) {
+        if (req.body.grant_type !== 'refresh_token' && !req.body.code_verifier) {
             return res.status(400).json({
                 error: "invalid_request",
                 error_code: "code_verifier is missing",
             });
         }
+        console.log(req.body);
+        if (!req.body.client_secret) {
+            req.body.client_secret = null;
+        }
         app.oauth.token(new OAuth2Server.Request(req), new OAuth2Server.Response(res))
             .then((token) =>
                 res
                     .set('Cache-Control', 'no-store')
-                    .set('Pragma: no-cache')
+                    .set('Pragma', 'no-cache')
                     .json({
                         access_token: token.accessToken,
                         expires_in: config.getConfig().accessTokenExpiration,

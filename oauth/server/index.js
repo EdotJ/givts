@@ -22,7 +22,8 @@ const cookieParser = require("cookie-parser")
 const app = express();
 const cors = require("cors");
 const corsOptions = {
-    origin: configuration.getConfig().clientUrl,
+    // TODO: configure to fetch from db
+    origin: [configuration.getConfig().clientUrl, "http://localhost:80", "http://localhost"],
     optionsSuccessStatus: 200,
     credentials: true,
 }
@@ -35,6 +36,7 @@ app.oauth = new OAuth2Server({
     authorizationCodeLifetime: configuration.getConfig().authCodeExpiration,
     refreshTokenLifetime: configuration.getConfig().refreshTokenExpiration,
     allowEmptyState: true,
+    requireClientAuthentication: {refresh_token: false}
 });
 
 const authenticator = require("./auth/authenticator")(userDb);

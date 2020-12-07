@@ -1,6 +1,7 @@
 package com.givts.app.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
@@ -29,6 +30,12 @@ public class Gift implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "occasion_id")
     private Occasion occasion;
+
+    @Column(name = "image_path")
+    private String imagePath;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -76,6 +83,22 @@ public class Gift implements Serializable {
 
     public void setOccasion(Occasion occasion) {
         this.occasion = occasion;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override

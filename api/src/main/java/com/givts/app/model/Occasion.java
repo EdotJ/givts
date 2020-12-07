@@ -82,6 +82,10 @@ public class Occasion implements Serializable {
         this.giftee = giftee;
     }
 
+    public List<Gift> getGifts() {
+        return gifts;
+    }
+
     @Override
     public String toString() {
         return "Occasion{" +

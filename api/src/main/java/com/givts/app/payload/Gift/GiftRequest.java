@@ -1,9 +1,9 @@
 package com.givts.app.payload.Gift;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class GiftRequest {
 
@@ -11,8 +11,11 @@ public class GiftRequest {
     @Size(min = 1, message = "{name.notEmpty}")
     private String name;
 
-    @NotNull(message = "{gift.description.notNull}")
     private String description;
+
+    @NotNull(message = "{gift.price.notNull}")
+    @PositiveOrZero(message = "{gift.price.notNegative}")
+    private BigDecimal price;
 
     public GiftRequest(String name, String description) {
         this.name = name;
@@ -33,5 +36,13 @@ public class GiftRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

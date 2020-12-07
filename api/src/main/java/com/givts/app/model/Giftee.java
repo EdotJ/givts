@@ -25,6 +25,15 @@ public class Giftee implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "likes")
+    private String likes;
+
+    @Column(name = "dislikes")
+    private String dislikes;
+
+    @Column(name = "hobbies")
+    private String hobbies;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "giftee")
     private List<Occasion> occasions;
 
@@ -58,6 +67,30 @@ public class Giftee implements Serializable {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
+    public String getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(String dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public String getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(String hobbies) {
+        this.hobbies = hobbies;
     }
 
     @Override
