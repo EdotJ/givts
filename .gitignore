@@ -4,3 +4,4 @@ docker-compose.prod.yml
 secrets
 ./oauth/node_modules
 ./uploads
+./node_modules
