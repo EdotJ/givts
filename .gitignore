@@ -3,5 +3,5 @@ docker-compose.prod.yml
 .idea
 secrets
 ./oauth/node_modules
-./uploads
-./node_modules
+./uploads/**
+./node_modules/**
