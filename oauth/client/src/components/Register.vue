@@ -71,10 +71,16 @@
         </p>
       </div>
       <p
-        v-if="hasError"
-        class="text-red-500 text-xs italic"
+          v-if="hasError"
+          class="text-red-500 text-xs italic"
       >
         An error occurred. Please try again.
+      </p>
+      <p
+          v-if="userAlreadyExists"
+          class="text-red-500 text-xs italic"
+      >
+        User with those credentials already exists!
       </p>
       <div class="flex items-center justify-between">
         <button
@@ -115,6 +121,7 @@ export default {
       isEmptyPassword: false,
       isEmptyEmail: false,
       isEmptyUsername: false,
+      userAlreadyExists: false,
     }
   },
   methods: {
@@ -139,6 +146,10 @@ export default {
             this.hasError = true;
           } else {
             this.$router.push({path: 'login'})
+          }
+        }).catch(err => {
+          if (err.response.status === 400) {
+            this.userAlreadyExists = true;
           }
         })
       }

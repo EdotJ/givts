@@ -7,22 +7,70 @@ services:
       MYSQL_DATABASE:
       MYSQL_USER:
       MYSQL_PASSWORD:
+      TZ: "Europe/Vilnius"
     networks:
       - backend
     restart: on-failure
     ports:
       - '3306:3306'
+
+  database-oauth:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE:
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+      TZ: Europe/Vilnius
+    networks:
+      - oauth
+    restart: on-failure
+    ports:
+      - '3307:3306'
+
   web:
     build:
       context: .
       dockerfile: docker/Dockerfile.web.prod
+      args:
+        VUE_APP_GIVTS_API_URL:
+        VUE_APP_CLIENT_ID:
+        VUE_APP_OAUTH_CLIENT_HOST:
+        VUE_APP_OAUTH_API_HOST:
     volumes:
       - './web:/usr/src/app'
       - '/usr/src/app/node_modules'
     ports:
-      - '80:80'
-      - '443:443'
+      - '80:8080'
+
+  oauth-backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.oauth.server.prod
+    volumes:
+      - './oauth/server:/usr/src/app'
+      - '/usr/src/app/node_modules'
+      - './oauth/server/ext:/usr/src/app/ext'
+    ports:
+      - '9229:9229'
+      - '3001:3000'
+    networks:
+      - oauth
+
+  oauth-frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.oauth.client.prod
+    volumes:
+      - './oauth/client:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '81:8080'
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
 networks:
   backend:
+    driver: bridge
+  oauth:
     driver: bridge

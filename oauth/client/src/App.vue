@@ -1,9 +1,9 @@
 <template>
   <div
-    id="app"
-    class="bg-blue-900 h-screen"
+      id="app"
+      class="bg-blue-900 h-screen"
   >
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
@@ -18,9 +18,12 @@ export default {
     }
   },
   watch: {
-    '$route'(to, ) {
+    '$route'(to,) {
       document.title = to.meta.title || 'Authorizer'
     }
+  },
+  mounted() {
+    console.log(store);
   }
 }
 

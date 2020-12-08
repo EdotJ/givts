@@ -53,6 +53,7 @@
 import configuration from "../config";
 import axios from "axios";
 import qs from "querystring";
+import store from "../store";
 
 const checkError = (query) => {
   if (!query.client_id) {
@@ -69,7 +70,7 @@ export default {
     return {
       isLoading: true,
       error: '',
-      store: this.$root.$data.store,
+      store: store,
       clientName: '',
       clientRedirectUri: '',
     };
@@ -80,25 +81,25 @@ export default {
       location.replace(`${this.$route.query.redirect_uri}?error=invalid_request`);
     }
     if (!this.error) {
-      this.store.setClientIdAction(this.$route.query.client_id);
-      this.store.setClientStateAction(this.$route.query.state);
-      this.store.setRedirectUriAction(this.$route.query.redirect_uri);
-      this.store.setCodeChallengeAction(this.$route.query.code_challenge);
+      store.setClientIdAction(this.$route.query.client_id);
+      store.setClientStateAction(this.$route.query.state);
+      store.setRedirectUriAction(this.$route.query.redirect_uri);
+      store.setCodeChallengeAction(this.$route.query.code_challenge);
       if (!this.$route.query.code_challenge_method) {
-        this.store.setCodeChallengeMethodAction("S256");
+        store.setCodeChallengeMethodAction("S256");
       } else {
-        this.store.setCodeChallengeMethodAction(this.$route.query.code_challenge_method);
+        store.setCodeChallengeMethodAction(this.$route.query.code_challenge_method);
       }
-      this.store.setAuthorizationAction(true);
+      store.setAuthorizationAction(true);
       axios.get(`${configuration.hostname}/oauth/authorize`).then(() => {
         axios.get(`${configuration.hostname}/oauth/client/${this.$route.query.client_id}`).then(res => {
           this.isLoading = false;
           this.clientName = res.data.client.name;
           this.clientRedirectUri = res.data.client.redirectUri;
 
-          if (!this.store.state.redirectUri) {
-            this.store.setRedirectUriAction(this.clientRedirectUri);
-          } else if (!this.clientRedirectUri.startsWith(this.store.state.redirectUri)) {
+          if (!store.state.redirectUri) {
+            store.setRedirectUriAction(this.clientRedirectUri);
+          } else if (!this.clientRedirectUri.startsWith(store.state.redirectUri)) {
             this.error = "Redirect URI hosts are not matching!"
           }
         }).catch(err => {
@@ -122,15 +123,15 @@ export default {
         }
       }
       const body = {
-        client_id: this.store.state.clientId,
+        client_id: store.state.clientId,
         response_type: 'code',
-        state: this.store.state.clientState,
-        code_challenge: this.store.state.codeChallenge,
-        code_challenge_method: this.store.state.codeChallengeMethod,
+        state: store.state.clientState,
+        code_challenge: store.state.codeChallenge,
+        code_challenge_method: store.state.codeChallengeMethod,
       }
       axios.post(`${configuration.hostname}/oauth/authorize`, qs.stringify(body), config).then(res => {
-        const redirectUri = this.store.state.redirectUri;
-        const clientState = this.store.state.clientState;
+        const redirectUri = store.state.redirectUri;
+        const clientState = store.state.clientState;
         console.log(res);
         location.replace(`${redirectUri}?code=${res.data.code}${clientState ? `&state=${clientState}` : ''}`);
       }).catch(err => {
@@ -139,7 +140,7 @@ export default {
       });
     },
     redirectError() {
-      const redirectUri = this.store.state.redirectUri;
+      const redirectUri = store.state.redirectUri;
       location.replace(`${redirectUri}?error=access_denied`);
     }
   }

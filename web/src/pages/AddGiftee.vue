@@ -70,7 +70,7 @@
 
 <script>
 import { GIFTEES_MODULE } from "../store/modules";
-import { GET_SINGLE, CREATE, UPDATE, DELETE } from "../store/actions.types";
+import { CREATE, UPDATE } from "../store/actions.types";
 import gifteeService from "../services/gifteeService";
 import { mapActions, mapState } from "vuex";
 import Button from "../components/Button";
@@ -206,8 +206,9 @@ h1 {
 
 label {
   display: inline-block;
-  min-width: 80px;
+  width: 120px;
   text-align: left;
+  padding-right: 1rem;
 }
 
 input {
@@ -223,7 +224,7 @@ input {
 
 .context-buttons {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
 }

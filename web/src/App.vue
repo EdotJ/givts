@@ -12,6 +12,9 @@ export default {
   components: {
     Template,
   },
+  mounted() {
+    document.title = "Givts";
+  }
 };
 </script>
 

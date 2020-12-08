@@ -67,7 +67,7 @@ export default {
   left: 0;
   position: absolute;
   background-color: black;
-  opacity: 50%;
+  opacity: 0.5;
   display: flex;
   justify-content: center;
 }

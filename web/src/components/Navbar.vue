@@ -164,7 +164,7 @@ export default {
 
 .hamburger-menu {
   border-top: 3px solid black;
-  opacity: 98%;
+  opacity: 0.98;
   background-color: #cd6565;
   position: absolute;
   left: 0;

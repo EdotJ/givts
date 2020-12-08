@@ -81,8 +81,7 @@ import configuration from "../config";
 import axios from "axios";
 
 export default {
-  // eslint-disable-next-line
-  name: 'Client Details',
+  name: 'ClientDetails',
   props: {
     // eslint-disable-next-line vue/require-default-prop
     id: {

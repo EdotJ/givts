@@ -1,8 +1,6 @@
-import {reactive} from 'vue';
-
 export default {
     debug: true,
-    state: reactive({
+    state: {
         clientId: '',
         clientState: '',
         redirectUri: '',
@@ -10,7 +8,7 @@ export default {
         username: '',
         codeChallenge: '',
         codeChallengeMethod: '',
-    }),
+    },
     setClientIdAction(newClientId) {
         if (this.debug) {
             console.log("setClientId triggered with", newClientId);

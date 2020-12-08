@@ -12,7 +12,9 @@ module.exports = {
       'button': ['']
     },
     extend: {
-        'auth-bg': "url('./src/assets/background.jpg')",
+        backgroundImage: theme => ({
+          'auth-bg': "url('/background.jpg')",
+        })
     },
   },
   variants: {},

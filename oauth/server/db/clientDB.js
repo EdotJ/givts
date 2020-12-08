@@ -17,7 +17,11 @@ function saveClient(name, description, client, user) {
     const saveClientQuery = `INSERT INTO clients (name, description, client_id, client_secret, redirect_uri,
                                                   grant_types, user_id)
                              VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const clientId = crypto.createHmac('sha256', name + Date.now().toString()).digest('base64').replace('/', '$');
+    const clientId = crypto.createHmac('sha256', name + Date.now().toString())
+        .digest('base64')
+        .replace('/', '-')
+        .replace('+', 'xd');
+    console.log("Created client:", clientId);
     const clientSecret = cryptoRandomString({length: 64, type: 'hex'});
     return mariadbPool
         .safeQuery(saveClientQuery, name, description, clientId, clientSecret, client.redirectUri, client.grants, user.id)

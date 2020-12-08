@@ -1,53 +1,55 @@
 <template>
-  <div class="flex justify-center">
-    <img
-      src="../assets/logo.png"
-      class="mt-10 center"
-      alt="Project Logo"
-    >
-  </div>
-  <div class="mb-4 text-2xl">
-    {{ msg }}
-  </div>
-  <div :class="{invisible: isHidden}">
-    <div
-      v-if="!isLoggedIn"
-      class="mt-6"
-    >
-      <router-link
-        to="/login"
-        class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline"
+  <div class="top-level">
+    <div class="flex justify-center">
+      <img
+          src="../assets/logo.png"
+          class="mt-10 center"
+          alt="Project Logo"
       >
-        Login
-      </router-link>
-      <router-link
-        to="/register"
-        class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Register
-      </router-link>
     </div>
-    <div
-      v-if="isLoggedIn"
-      class="mt-6"
-    >
-      <router-link
-        to="/client"
-        class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Client management
-      </router-link>
+    <div class="mb-4 text-2xl">
+      {{ msg }}
     </div>
-    <div
-      v-if="isLoggedIn"
-      class="mt-6"
-    >
-      <button
-        :onclick="logout"
-        class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    <div :class="{invisible: isHidden}">
+      <div
+          v-if="!isLoggedIn"
+          class="mt-6"
       >
-        Log out!
-      </button>
+        <router-link
+            to="/login"
+            class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Login
+        </router-link>
+        <router-link
+            to="/register"
+            class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Register
+        </router-link>
+      </div>
+      <div
+          v-if="isLoggedIn"
+          class="mt-6"
+      >
+        <router-link
+            to="/client"
+            class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Client management
+        </router-link>
+      </div>
+      <div
+          v-if="isLoggedIn"
+          class="mt-6"
+      >
+        <button
+            @click="logout()"
+            class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Log out!
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -76,7 +78,6 @@ export default {
       } else if (res.data.id) {
         if (res.data.id !== -1) {
           this.isLoggedIn = true;
-          this.$router.push({path: '/'})
         } else {
           this.isLoggedIn = false;
         }
@@ -91,7 +92,6 @@ export default {
   methods: {
     logout() {
       axios.post(`${configuration.hostname}/oauth/logout`).then(() => {
-        this.$router.push({path: '/'});
         location.reload();
       })
     }

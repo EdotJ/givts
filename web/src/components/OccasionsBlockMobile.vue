@@ -224,7 +224,7 @@ export default {
   flex-direction: row;
   min-width: 40%;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .gifts-container {

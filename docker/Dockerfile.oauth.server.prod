@@ -1,6 +1,7 @@
 FROM node:14.10.1-alpine3.12
 WORKDIR /usr/src/app
 COPY ./oauth/server/package*.json ./
+COPY ./oauth/server/ext ./ext
 RUN npm install
 ENV NODE_ENV=production
 EXPOSE 3000

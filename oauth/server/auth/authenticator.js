@@ -42,11 +42,10 @@ function registerUser(req, res) {
                     const message = error
                         ? "Something is wrong!"
                         : "This user already exists!";
-                    if (error) {
-                        console.log("registerUser#isValid -> ", error);
+                    if (message) {
+                        console.log("registerUser#isValid -> ", message);
                     }
-                    sendResponse(res, message, error);
-                    return;
+                    return sendResponse(res, message, error);
                 }
                 return userDb.register(req.body.username, req.body.email, req.body.password)
                     .then(response => {
@@ -90,7 +89,7 @@ function login(req) {
 }
 
 function sendResponse(res, message, error) {
-    res.status(error === undefined || error === null ? 200 : 400).json({
+    res.status(message === undefined || message === null ? 200 : 400).json({
         message: message,
         error: error,
     });

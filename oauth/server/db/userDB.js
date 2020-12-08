@@ -36,7 +36,7 @@ function getUser(username, password) {
 
     return mariadbPool.query(getUserQuery)
         .then((res) => {
-            return res && res.results.length === 1
+            return res && res.results && res.results.length === 1
                 ? res.results[0]
                 : null;
         })

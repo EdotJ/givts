@@ -81,6 +81,7 @@ import AuthTemplate from "./AuthTemplate";
 import axios from "axios";
 import qs from "querystring";
 import configuration from "../config";
+import store from "../store";
 
 export default {
   name: 'Login',
@@ -95,11 +96,13 @@ export default {
       isEmptyUsername: false,
       hasError: false,
       error: '',
-      store: this.$root.$data.store,
+
     }
   },
   methods: {
     login() {
+      console.log("Hello, world!");
+      console.log(this.$root.$data);
       this.isEmptyPassword = !this.password;
       this.isEmptyUsername = !this.username;
       if (!this.isEmptyPassword && !this.isEmptyUsername) {
@@ -117,15 +120,15 @@ export default {
             this.hasError = true;
             this.error = res.data.error;
           } else {
-            this.store.setUsernameAction(res.data.username);
-            if (this.store.state.isAuthorizingClient) {
+            store.setUsernameAction(res.data.username);
+            if (store.state.isAuthorizingClient) {
               this.$router.push({
                 path: '/oauth/authorize', query: {
-                  client_id: this.store.state.clientId,
-                  state: this.store.state.clientState,
-                  redirect_uri: this.store.state.redirect_uri,
-                  code_challenge: this.store.state.codeChallenge,
-                  code_challenge_method: this.store.state.codeChallengeMethod
+                  client_id: store.state.clientId,
+                  state: store.state.clientState,
+                  redirect_uri: store.state.redirect_uri,
+                  code_challenge: store.state.codeChallenge,
+                  code_challenge_method: store.state.codeChallengeMethod
                 }
               });
             } else {
@@ -133,6 +136,7 @@ export default {
             }
           }
         }).catch(err => {
+          console.log(err);
           if (err.response && err.response.status === 400) {
             this.hasError = true;
             this.error = "Invalid credentials or user does not exist!"

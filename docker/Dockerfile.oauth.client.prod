@@ -2,7 +2,7 @@ FROM node:latest as build-stage
 WORKDIR /usr/src/app
 COPY ./oauth/client/package*.json ./
 RUN npm install
-COPY ./web .
+COPY ./oauth/client .
 RUN npm run build
 
 FROM nginx as production-stage

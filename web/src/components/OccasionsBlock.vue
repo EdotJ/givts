@@ -65,13 +65,12 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import Button from "./Button";
 import IconBase from "./IconBase";
 import EditIcon from "./icons/EditIcon";
 import Loader from "./Loader";
 import { OCCASIONS_MODULE, GIFTS_MODULE } from "@/store/modules";
-import { GET_BY_OCCASION } from "@/store/getters.types";
 import { GET_ALL } from "@/store/actions.types";
 import { SET_SELECTED_OCCASION } from "../store/mutations.types";
 
@@ -183,7 +182,7 @@ export default {
   flex-direction: row;
   min-width: 40%;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .add-gift-button,
