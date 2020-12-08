@@ -22,7 +22,9 @@ const mutations = {
 const actions = {
   [GET_ALL]({ commit }) {
     return userService.getAll().then((res) => {
-      commit(SET_ALL, res);
+      if (res) {
+        commit(SET_ALL, res);
+      }
     });
   },
   [DELETE]({ commit }, id) {

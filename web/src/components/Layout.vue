@@ -106,7 +106,13 @@ export default {
 .loader {
   position: absolute;
   top: 30%;
-  left: 50%;
+  left: 40%;
+}
+
+@media only screen and (min-width: 961px) {
+  .loader {
+    left: 50%;
+  }
 }
 
 </style>

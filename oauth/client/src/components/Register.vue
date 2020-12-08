@@ -25,6 +25,12 @@
         >
           Please choose an email.
         </p>
+        <p
+            v-if="userInvalidEmail"
+            class="text-red-500 text-xs italic"
+        >
+          Please provide a valid email.
+        </p>
       </div>
       <div :class="{'mb-5': !isEmptyUsername}">
         <label
@@ -82,6 +88,12 @@
       >
         User with those credentials already exists!
       </p>
+      <p
+          v-if="hasGenericError"
+          class="text-red-500 text-xs italic"
+      >
+        Something went wrong. Please try again later.
+      </p>
       <div class="flex items-center justify-between">
         <button
           class="bg-gray-300 text-blue-800 hover:bg-blue-800 hover:text-gray-300 placeholder-gray-300 font-bold text-sm py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -122,6 +134,8 @@ export default {
       isEmptyEmail: false,
       isEmptyUsername: false,
       userAlreadyExists: false,
+      userInvalidEmail: false,
+      hasGenericError: false,
     }
   },
   methods: {
@@ -149,7 +163,13 @@ export default {
           }
         }).catch(err => {
           if (err.response.status === 400) {
-            this.userAlreadyExists = true;
+            if (err.response.data.error === "INVALID_EMAIL") {
+              this.userInvalidEmail = true;
+            } else if (err.response.data.error === "USER_EXISTS") {
+              this.userAlreadyExists = true;
+            } else {
+              this.hasGenericError = true;
+            }
           }
         })
       }

@@ -1,5 +1,5 @@
 <template>
-  <div class="top-level" v-if="!isLoading">
+  <div class="top-level" v-if="!isLoading && isAdmin">
     <h1>
       Admin Page
     </h1>
@@ -42,11 +42,12 @@
 </template>
 
 <script>
-import { USERS_MODULE } from "../store/modules";
-import { mapActions, mapState } from "vuex";
+import { USERS_MODULE, USER_MODULE } from "../store/modules";
+import { mapActions, mapState, mapGetters } from "vuex";
 import userService from "../services/userService";
 import { SET_IS_LOADING } from "../store/mutations.types";
 import { DELETE, GET_ALL } from "../store/actions.types";
+import { IS_ADMIN } from "../store/getters.types";
 import Loader from "../components/Loader";
 import Button from "../components/Button";
 import IconBase from "../components/IconBase";
@@ -61,6 +62,9 @@ export default {
     }),
     ...mapState(USERS_MODULE, {
       users: (state) => state.userList,
+    }),
+    ...mapGetters(USER_MODULE, {
+      isAdmin: IS_ADMIN
     }),
   },
   methods: {

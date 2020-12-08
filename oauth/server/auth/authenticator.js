@@ -45,6 +45,9 @@ function registerUser(req, res) {
                     if (message) {
                         console.log("registerUser#isValid -> ", message);
                     }
+                    if (!error) {
+                        error = "USER_EXISTS";
+                    }
                     return sendResponse(res, message, error);
                 }
                 return userDb.register(req.body.username, req.body.email, req.body.password)
@@ -89,7 +92,7 @@ function login(req) {
 }
 
 function sendResponse(res, message, error) {
-    res.status(message === undefined || message === null ? 200 : 400).json({
+    res.status(error === undefined || error === null ? 200 : 400).json({
         message: message,
         error: error,
     });

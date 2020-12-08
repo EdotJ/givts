@@ -49,6 +49,7 @@
             to="/giftees"
             class="hamburger-menu-url foreground-accent"
             v-on:click.native="toggleBurger()"
+            v-if="loggedIn"
           >
             Giftees
           </router-link>
@@ -56,6 +57,7 @@
             to="/admin"
             class="hamburger-menu-url foreground-accent"
             v-on:click.native="toggleBurger()"
+            v-if="loggedIn && isAdmin"
           >
             Admin page
           </router-link>
@@ -63,6 +65,7 @@
             to="/user"
             class="hamburger-menu-url foreground-accent"
             v-on:click.native="toggleBurger()"
+            v-if="loggedIn"
           >
             Settings
           </router-link>

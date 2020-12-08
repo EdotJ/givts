@@ -2,7 +2,7 @@ import pkceChallenge from "pkce-challenge";
 import store from "../store";
 import axios from "@/helpers/axiosInterceptor";
 import {
-  SET_CODE_VERIFIER,
+  SET_CODE_VERIFIER, SET_IS_LOADING,
   SET_OAUTH_STATE,
   SET_USER_AUTH_DATA
 } from "../store/mutations.types";
@@ -38,6 +38,8 @@ export default {
     if (oauthState !== store.state.oauthState) {
       console.log("Returned state:" + oauthState);
       console.log("Current state:" + store.state.oauthState);
+      store.commit(SET_IS_LOADING, false);
+      window.location = "/";
       throw "State did not match!";
     }
     const body = {

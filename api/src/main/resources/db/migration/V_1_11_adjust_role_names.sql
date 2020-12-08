@@ -1,0 +1,1 @@
+UPDATE roles SET name = 'ROLE_ADMIN' WHERE name = 'ADMIN';
